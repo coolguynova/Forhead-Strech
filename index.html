@@ -14,7 +14,7 @@
         * { box-sizing: border-box; }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, Arial, sans-serif;
             background-color: var(--bg); color: var(--fg);
             display: flex; flex-direction: column; align-items: center;
             padding: 2rem 1rem; margin: 0; min-height: 100vh;
@@ -22,10 +22,10 @@
             overflow-x: hidden;
         }
 
-        /* --- HEADER & TYPOGRAPHY --- */
+        /* --- HEADER --- */
         .header-wrap { display: flex; align-items: center; gap: 1rem; margin-bottom: 0.5rem; }
         h1 { font-size: clamp(2rem, 8vw, 3.5rem); font-weight: 900; letter-spacing: -2px; margin: 0; text-align: center; line-height: 1.1; }
-        .sub-text { font-size: 1.1rem; font-weight: 500; margin-bottom: 2rem; border-bottom: 3px solid var(--border); padding-bottom: 0.5rem; display: inline-block; }
+        .sub-text { font-size: 1.1rem; font-weight: 500; margin-bottom: 2rem; border-bottom: 3px solid var(--border); padding-bottom: 0.5rem; }
 
         #tBtn {
             background: var(--panel); color: var(--fg); border: 3px solid var(--border);
@@ -34,24 +34,24 @@
         }
         #tBtn:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0px var(--border); }
 
-        /* --- MAIN PANEL --- */
+        /* --- PANEL --- */
         .pikachu-panel {
             background: var(--panel); border: 3px solid var(--border); border-radius: 8px;
             box-shadow: 8px 8px 0px var(--border); padding: 1.5rem; margin-bottom: 2rem;
             width: 100%; max-width: 480px; display: flex; flex-direction: column; gap: 1.2rem;
         }
 
-        label { display: flex; flex-direction: column; font-weight: 800; font-size: 0.85rem; text-transform: uppercase; gap: 8px; }
-        .check-wrap { flex-direction: row; align-items: center; cursor: pointer; margin-top: 0.5rem; }
-        input[type="checkbox"] { width: 20px; height: 20px; accent-color: #ff4747; border: 2px solid var(--border); cursor: pointer; }
+        label { display: flex; flex-direction: column; font-weight: 800; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px; gap: 8px; }
+
+        .action-row { display: flex; gap: 10px; width: 100%; }
 
         input[type="file"] {
             font-family: inherit; border: 2px solid var(--border); padding: 0.5rem;
-            background: var(--bg); color: var(--fg); border-radius: 4px; cursor: pointer; font-weight: 600; width: 100%;
+            background: var(--bg); color: var(--fg); border-radius: 4px; cursor: pointer; font-weight: 600; flex: 1;
         }
         input[type="file"]::file-selector-button {
-            background: var(--border); color: var(--bg); border: none; padding: 0.4rem 0.8rem;
-            border-radius: 2px; margin-right: 1rem; cursor: pointer; font-weight: bold;
+            background: var(--border); color: var(--bg); border: none; padding: 0.4rem;
+            border-radius: 2px; margin-right: 0.5rem; cursor: pointer; font-weight: bold;
         }
 
         /* --- SLIDERS --- */
@@ -63,14 +63,28 @@
         }
         #wSlider::-webkit-slider-thumb { background: #6272a4; }
         input[type="range"]::-webkit-slider-runnable-track { width: 100%; height: 8px; background: var(--track); border: 2px solid var(--border); border-radius: 4px; }
+        input[type="range"]::-moz-range-track { width: 100%; height: 8px; background: var(--track); border: 2px solid var(--border); border-radius: 4px; }
 
-        /* --- STICKERS --- */
+        /* --- TEXT INPUTS --- */
+        .text-input {
+            width: 100%; padding: 0.8rem; font-family: Impact, sans-serif; font-size: 1.2rem;
+            border: 2px solid var(--border); border-radius: 4px; background: var(--bg); color: var(--fg);
+        }
+
+        /* --- STICKERS & OPTIONS --- */
         .sticker-bar { display: flex; gap: 10px; margin-bottom: 5px; }
         .sticker-btn {
             background: var(--bg); border: 2px solid var(--border); border-radius: 4px;
             font-size: 1.5rem; padding: 5px; cursor: pointer; box-shadow: 2px 2px 0px var(--border); transition: transform 0.1s;
         }
         .sticker-btn:active { transform: translate(2px, 2px); box-shadow: 0px 0px 0px var(--border); }
+
+        .options-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+            border-top: 2px dashed var(--border); padding-top: 15px; margin-top: 5px;
+        }
+        .check-wrap { flex-direction: row; align-items: center; cursor: pointer; }
+        input[type="checkbox"] { width: 20px; height: 20px; accent-color: #ff4747; border: 2px solid var(--border); cursor: pointer; }
 
         /* --- BUTTONS --- */
         .btn-row { display: flex; gap: 1rem; margin-top: 1rem; }
@@ -83,14 +97,27 @@
         .btn-alt { background: var(--panel); color: var(--fg); flex: 0.5; }
         .btn[disabled] { opacity: 0.5; cursor: not-allowed; pointer-events: none; }
 
-        /* --- CANVAS --- */
+        /* --- FIREFOX BRUTE-FORCE CANVAS WRAPPER --- */
         .cvs-wrap {
             border: 3px solid var(--border); background: var(--panel); box-shadow: 8px 8px 0px var(--border);
             border-radius: 8px; padding: 0.5rem; width: 100%; max-width: 800px;
-            display: none; margin-bottom: 2rem; overflow: auto; max-height: 70vh;
+            display: none; margin-bottom: 2rem; 
+            
+            /* FORCE THE SCROLLBAR */
+            overflow-y: scroll !important; 
+            max-height: 70vh;
+            
+            /* Firefox standards */
+            scrollbar-width: auto !important;
+            scrollbar-color: #ff4747 var(--panel) !important;
         }
         .cvs-wrap.active { display: block; }
         canvas { display: block; width: 100%; height: auto; border: 2px solid var(--border); background: var(--cvs-bg); cursor: crosshair; }
+
+        /* Chrome/Edge Scrollbar Fallback */
+        .cvs-wrap::-webkit-scrollbar { width: 16px; display: block !important; }
+        .cvs-wrap::-webkit-scrollbar-track { background: var(--panel); border-left: 3px solid var(--border); }
+        .cvs-wrap::-webkit-scrollbar-thumb { background: #ff4747; border: 3px solid var(--border); border-radius: 8px; }
 
         /* --- CONFETTI --- */
         .confetti-piece { position: fixed; top: -10px; z-index: 9999; pointer-events: none; }
@@ -104,17 +131,19 @@
             <path d="M30 20 L50 10 L70 20 M30 80 L50 90 L70 80" stroke="#b9ff66" stroke-width="8" fill="none" stroke-linecap="round"/>
             <rect x="35" y="30" width="30" height="40" fill="none" stroke="#b9ff66" stroke-width="6" rx="5"/>
         </svg>
-        <h1>Forehead Stretcher</h1>
+        <h1>Forehead Stretcher Pro</h1>
         <button id="tBtn">🌙</button>
     </div>
     
     <p class="sub-text">Expand your mind (literally).</p>
 
     <div class="pikachu-panel">
-        <label>
-            1. Select an Image
+        
+        <label>1. Select Image or Snap Selfie</label>
+        <div class="action-row">
             <input type="file" id="fileIn" accept="image/*">
-        </label>
+            <button class="btn btn-alt" id="camBtn" style="flex: 0.4;">📸 Selfie</button>
+        </div>
         
         <label>
             2. Forehead Cut Line
@@ -131,7 +160,7 @@
             <input type="range" id="wSlider" min="0.5" max="3" step="0.1" value="1">
         </label>
 
-        <label>5. Stickers (Click to drop, drag to move)</label>
+        <label>5. Stickers (Drag to move)</label>
         <div class="sticker-bar">
             <button class="sticker-btn">🧠</button>
             <button class="sticker-btn">👁️</button>
@@ -140,9 +169,16 @@
             <button class="sticker-btn" id="clearStickers" style="font-size: 0.8rem; flex: 1;">Clear</button>
         </div>
 
-        <label class="check-wrap" style="border-top: 2px dashed var(--border); padding-top: 15px;">
-            <input type="checkbox" id="guideCb" checked> Show Red Guide Line
-        </label>
+        <label>6. Meme Text</label>
+        <input type="text" id="topText" class="text-input" placeholder="TOP TEXT" style="margin-bottom: 8px;">
+        <input type="text" id="botText" class="text-input" placeholder="BOTTOM TEXT">
+
+        <div class="options-grid">
+            <label class="check-wrap"><input type="checkbox" id="guideCb" checked> Guide Line</label>
+            <label class="check-wrap"><input type="checkbox" id="sfxCb"> 🔊 SFX</label>
+            <label class="check-wrap"><input type="checkbox" id="jelloCb"> 🪼 Jello Mode</label>
+            <label class="check-wrap"><input type="checkbox" id="fryCb"> 🍟 Deep Fry</label>
+        </div>
 
         <div class="btn-row">
             <button class="btn btn-alt" id="rstBtn" disabled>Reset</button>
@@ -150,33 +186,49 @@
         </div>
     </div>
 
+    <video id="webcamVideo" autoplay playsinline style="display:none;"></video>
+
     <div class="cvs-wrap" id="wrap">
         <canvas id="cvs"></canvas>
     </div>
 
     <script>
-        // --- ALL JAVASCRIPT LOGIC SAFELY INSIDE THE HTML FILE ---
         const UI = {
-            fileIn: document.getElementById('fileIn'),
+            fileIn: document.getElementById('fileIn'), camBtn: document.getElementById('camBtn'),
             y: document.getElementById('ySlider'), s: document.getElementById('sSlider'), w: document.getElementById('wSlider'),
-            guide: document.getElementById('guideCb'),
+            guide: document.getElementById('guideCb'), sfx: document.getElementById('sfxCb'),
+            jello: document.getElementById('jelloCb'), fry: document.getElementById('fryCb'),
+            topText: document.getElementById('topText'), botText: document.getElementById('botText'),
             dlBtn: document.getElementById('dlBtn'), rstBtn: document.getElementById('rstBtn'),
             tBtn: document.getElementById('tBtn'), cvs: document.getElementById('cvs'),
-            wrap: document.getElementById('wrap')
+            wrap: document.getElementById('wrap'), video: document.getElementById('webcamVideo')
         };
         const ctx = UI.cvs.getContext('2d');
 
         let pikachu = null, sW = 0, sH = 0, isCoolingDown = false;
-        let stickers = [], draggingSticker = null;
+        let stickers = [], draggingSticker = null, audioCtx = null;
+        let animationFrameId = null;
 
-        // Theme Toggle
+        // --- UTILS & CORE ---
         UI.tBtn.onclick = () => {
             const mode = document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
             document.body.setAttribute('data-theme', mode);
             UI.tBtn.innerText = mode === 'dark' ? '☀️' : '🌙';
         };
 
-        // File Upload
+        function activateEditor(img) {
+            pikachu = img;
+            const maxW = 800;
+            const ratio = img.width > maxW ? maxW / img.width : 1;
+            sW = img.width * ratio;
+            sH = img.height * ratio;
+            UI.dlBtn.removeAttribute('disabled');
+            UI.rstBtn.removeAttribute('disabled');
+            UI.wrap.classList.add('active');
+            triggerRender();
+        }
+
+        // --- FILE UPLOAD ---
         UI.fileIn.onclick = function() { this.value = null; };
         UI.fileIn.onchange = e => {
             const file = e.target.files[0];
@@ -185,37 +237,72 @@
             const reader = new FileReader();
             reader.onload = ev => {
                 const img = new Image();
-                img.onload = () => {
-                    pikachu = img;
-                    const maxW = 800;
-                    const ratio = img.width > maxW ? maxW / img.width : 1;
-                    sW = img.width * ratio;
-                    sH = img.height * ratio;
-                    UI.dlBtn.removeAttribute('disabled');
-                    UI.rstBtn.removeAttribute('disabled');
-                    UI.wrap.classList.add('active');
-                    resetParams();
-                };
+                img.onload = () => activateEditor(img);
                 img.src = ev.target.result;
             }
             reader.readAsDataURL(file);
         };
 
-        // Inputs triggering redraw
-        UI.y.oninput = triggerRender;
-        UI.s.oninput = triggerRender;
-        UI.w.oninput = triggerRender;
-        UI.guide.onchange = triggerRender;
+        // --- SELFIE CAM ---
+        UI.camBtn.onclick = async () => {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } });
+                UI.video.srcObject = stream;
+                UI.camBtn.innerText = '⏳ Cheese...';
+                
+                setTimeout(() => {
+                    const snapCvs = document.createElement('canvas');
+                    snapCvs.width = UI.video.videoWidth; snapCvs.height = UI.video.videoHeight;
+                    snapCvs.getContext('2d').drawImage(UI.video, 0, 0);
+                    
+                    const img = new Image();
+                    img.onload = () => {
+                        stream.getTracks().forEach(track => track.stop());
+                        UI.camBtn.innerText = '📸 Selfie';
+                        activateEditor(img);
+                    };
+                    img.src = snapCvs.toDataURL('image/png');
+                }, 2000);
+            } catch (err) {
+                alert("Camera access denied or unavailable.");
+            }
+        };
 
-        UI.rstBtn.onclick = resetParams;
-
-        function resetParams() {
-            UI.s.value = 1; UI.w.value = 1; UI.y.value = 25;
-            stickers = []; UI.guide.checked = true;
-            triggerRender();
+        // --- AUDIO SFX ---
+        function playSlideWhistle(value) {
+            if(!UI.sfx.checked) return;
+            if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            if(audioCtx.state === 'suspended') audioCtx.resume();
+            const osc = audioCtx.createOscillator(), gain = audioCtx.createGain();
+            osc.frequency.value = 200 + (value * 150); osc.type = 'sine';
+            osc.connect(gain); gain.connect(audioCtx.destination);
+            osc.start(); gain.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + 0.1); osc.stop(audioCtx.currentTime + 0.1);
         }
 
-        // Sticker Logic
+        // --- EVENT LISTENERS ---
+        UI.y.oninput = triggerRender;
+        UI.w.oninput = triggerRender;
+        UI.guide.onchange = triggerRender;
+        UI.fry.onchange = triggerRender;
+        UI.topText.oninput = triggerRender;
+        UI.botText.oninput = triggerRender;
+
+        UI.s.oninput = (e) => { triggerRender(); playSlideWhistle(e.target.value); };
+
+        UI.jello.onchange = () => {
+            if(UI.jello.checked) animateJello();
+            else { cancelAnimationFrame(animationFrameId); triggerRender(); }
+        };
+
+        UI.rstBtn.onclick = () => {
+            UI.s.value = 1; UI.w.value = 1; UI.y.value = 25;
+            UI.topText.value = ''; UI.botText.value = '';
+            stickers = []; UI.guide.checked = true; UI.fry.checked = false; UI.jello.checked = false;
+            cancelAnimationFrame(animationFrameId);
+            triggerRender();
+        };
+
+        // --- STICKERS ---
         document.querySelectorAll('.sticker-btn').forEach(btn => {
             btn.onclick = (e) => {
                 if(e.target.id === 'clearStickers') stickers = [];
@@ -224,11 +311,13 @@
             };
         });
 
-        // Dragging Stickers
         UI.cvs.onmousedown = e => {
             const rect = UI.cvs.getBoundingClientRect();
-            const mx = (e.clientX - rect.left) * (UI.cvs.width / rect.width);
-            const my = (e.clientY - rect.top) * (UI.cvs.height / rect.height);
+            const scaleX = UI.cvs.width / rect.width;
+            const scaleY = UI.cvs.height / rect.height;
+            const mx = (e.clientX - rect.left) * scaleX;
+            const my = (e.clientY - rect.top) * scaleY;
+
             for(let i = stickers.length - 1; i >= 0; i--) {
                 const s = stickers[i];
                 ctx.font = `${s.size}px Arial`;
@@ -248,8 +337,16 @@
         UI.cvs.onmouseup = () => draggingSticker = null;
         UI.cvs.onmouseleave = () => draggingSticker = null;
 
-        // Core Rendering
-        function triggerRender() { drawStretchedImage(); }
+        // --- RENDERING ENGINE ---
+        function triggerRender() {
+            if(!UI.jello.checked) drawStretchedImage();
+        }
+
+        function animateJello() {
+            if(!UI.jello.checked) return;
+            drawStretchedImage();
+            animationFrameId = requestAnimationFrame(animateJello);
+        }
 
         function drawStretchedImage(isExporting = false, targetCtx = ctx, targetWidth = UI.cvs.width, targetHeight = UI.cvs.height) {
             if (!pikachu) return;
@@ -268,22 +365,49 @@
 
             targetCtx.clearRect(0, 0, targetWidth, targetHeight);
 
+            // DEEP FRY FILTER
+            if (UI.fry.checked) {
+                targetCtx.filter = 'contrast(250%) saturate(300%) sepia(50%) hue-rotate(-20deg)';
+            } else {
+                targetCtx.filter = 'none';
+            }
+
+            // JELLO WOBBLE MATH
+            let jelloOffset = 0;
+            if (UI.jello.checked && !isExporting) {
+                const time = Date.now();
+                jelloOffset = Math.sin(time / 150) * 30 * (sm / 2);
+            }
+
             const tw = targetWidth * wm;
-            const tx = (targetWidth - tw) / 2;
+            const tx = ((targetWidth - tw) / 2) + jelloOffset;
             const origCut = pikachu.height * (parseFloat(UI.y.value) / 100);
             const origBot = pikachu.height - origCut;
 
             targetCtx.drawImage(pikachu, 0, 0, pikachu.width, origCut, tx, 0, tw, newTopH);
             targetCtx.drawImage(pikachu, 0, origCut, pikachu.width, origBot, 0, newTopH, targetWidth, botH);
 
-            // Draw Stickers
+            targetCtx.filter = 'none'; // Reset filter
+
+            // MEME TEXT
+            const topT = UI.topText.value.toUpperCase();
+            const botT = UI.botText.value.toUpperCase();
             targetCtx.textAlign = "center";
+            targetCtx.font = "bold 50px Impact, sans-serif";
+            targetCtx.fillStyle = "white";
+            targetCtx.strokeStyle = "black";
+            targetCtx.lineWidth = 4;
+            
+            if(topT) { targetCtx.strokeText(topT, targetWidth/2, 60); targetCtx.fillText(topT, targetWidth/2, 60); }
+            if(botT) { targetCtx.strokeText(botT, targetWidth/2, targetHeight - 30); targetCtx.fillText(botT, targetWidth/2, targetHeight - 30); }
+
+            // STICKERS
             stickers.forEach(s => {
                 targetCtx.font = `${s.size}px Arial`;
                 targetCtx.fillText(s.text, s.x, s.y);
             });
 
-            // Draw Guide Line
+            // GUIDE LINE
             if (UI.guide.checked && !isExporting && targetCtx === ctx) {
                 targetCtx.beginPath(); targetCtx.moveTo(0, newTopH); targetCtx.lineTo(targetWidth, newTopH);
                 targetCtx.strokeStyle = '#ff4747'; targetCtx.lineWidth = 3; targetCtx.setLineDash([10, 8]); 
@@ -291,7 +415,7 @@
             }
         }
 
-        // Confetti Engine
+        // --- CONFETTI ENGINE ---
         function fireConfetti() {
             const colors = ['#ff4747', '#b9ff66', '#ff79c6', '#8be9fd', '#f1fa8c'];
             for(let i=0; i<80; i++) {
@@ -312,7 +436,7 @@
             }
         }
 
-        // Polaroid Export
+        // --- POLAROID EXPORT ---
         UI.dlBtn.onclick = () => {
             if (!pikachu || isCoolingDown) return;
             isCoolingDown = true;
@@ -334,7 +458,10 @@
             
             exportCtx.fillStyle = '#111';
             exportCtx.fillRect(padding - 5, padding - 5, sW + 10, sH + 10);
+            
+            if(UI.fry.checked) exportCtx.filter = 'contrast(250%) saturate(300%) sepia(50%) hue-rotate(-20deg)';
             exportCtx.drawImage(pikachu, padding, padding, sW, sH);
+            exportCtx.filter = 'none';
             
             const rightStartX = sW + (padding * 2);
             exportCtx.fillRect(rightStartX - 5, padding - 5, sW + 10, stretchedH + 10);

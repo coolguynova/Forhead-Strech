@@ -1,0 +1,24 @@
+{
+  "name": "forhead-strech",
+  "version": "1.0.0",
+  "description": "Expand your mind (literally). A neo-brutalist web app that lets you upload an image and stretch anyone's forehead to the moon. Built with vanilla JS and HTML5 Canvas",
+  "main": "index.html",
+  "scripts": {
+    "dev": "python3 -m http.server 8000 || python -m SimpleHTTPServer 8000",
+    "test": "echo \"No tests configured\" && exit 0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/coolguynova/Forhead-Strech.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/coolguynova/Forhead-Strech/issues"
+  },
+  "homepage": "https://github.com/coolguynova/Forhead-Strech#readme",
+  "dependencies": {
+    "@vercel/analytics": "^2.0.1"
+  }
+}

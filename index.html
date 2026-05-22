@@ -3,451 +3,69 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Forehead Stretcher Pro</title>
-
+    <title>Forehead Stretcher</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23111'/><path d='M30 20 L50 10 L70 20 M30 80 L50 90 L70 80' stroke='%23b9ff66' stroke-width='8' fill='none' stroke-linecap='round'/><rect x='35' y='30' width='30' height='40' fill='none' stroke='%23b9ff66' stroke-width='6' rx='5'/></svg>">
-    
     <style>
-        :root {
-            --bg: #f4f4f0;
-            --fg: #111;
-            --panel: #ffffff;
-            --border: #111;
-            --btn: #b9ff66;
-            --cvs-bg: #eee;
-            --track: #e0e0e0;
-        }
-
-        [data-theme="dark"] {
-            --bg: #121212;
-            --fg: #f4f4f0;
-            --panel: #1e1e1e;
-            --border: #f4f4f0;
-            --btn: #ff79c6;
-            --cvs-bg: #333;
-            --track: #444;
-        }
-
-        * { 
-            box-sizing: border-box; 
-            scrollbar-width: none;
-            -ms-overflow-style: none;
-        }
-
-        *::-webkit-scrollbar {
-            display: none;
-        }
-        
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
-            background-color: var(--bg);
-            color: var(--fg);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 2rem 1rem;
-            margin: 0;
-            min-height: 100vh;
-            transition: background-color 0.2s, color 0.2s;
-        }
-
-        .header-wrap {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            margin-bottom: 0.5rem;
-        }
-
-        h1 {
-            font-size: clamp(2rem, 8vw, 3.5rem);
-            font-weight: 900;
-            letter-spacing: -2px;
-            margin: 0;
-            text-align: center;
-            line-height: 1.1;
-        }
-
-        #tBtn {
-            background: var(--panel);
-            color: var(--fg);
-            border: 3px solid var(--border);
-            font-size: 1.5rem;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            cursor: pointer;
-            box-shadow: 4px 4px 0px var(--border);
-            transition: transform 0.1s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        #tBtn:active {
-            transform: translate(2px, 2px);
-            box-shadow: 2px 2px 0px var(--border);
-        }
-
-        .sub-text {
-            font-size: 1.1rem;
-            font-weight: 500;
-            margin-bottom: 2rem;
-            text-align: center;
-            border-bottom: 3px solid var(--border);
-            padding-bottom: 0.5rem;
-            display: inline-block;
-        }
-
-        .pikachu-panel {
-            background: var(--panel);
-            border: 3px solid var(--border);
-            border-radius: 8px;
-            box-shadow: 8px 8px 0px var(--border);
-            padding: 1.5rem;
-            margin-bottom: 2rem;
-            width: 100%;
-            max-width: 480px;
-            display: flex;
-            flex-direction: column;
-            gap: 1.2rem;
-            transition: background-color 0.2s, box-shadow 0.2s, border 0.2s;
-        }
-
-        label {
-            display: flex;
-            flex-direction: column;
-            font-weight: 800;
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            gap: 8px;
-        }
-        
-        .check-wrap {
-            flex-direction: row;
-            align-items: center;
-            cursor: pointer;
-            margin-top: 0.5rem;
-        }
-
-        input[type="checkbox"] {
-            width: 20px;
-            height: 20px;
-            accent-color: #ff4747;
-            border: 2px solid var(--border);
-            cursor: pointer;
-        }
-
-        input[type="file"] {
-            font-family: inherit;
-            border: 2px solid var(--border);
-            padding: 0.5rem;
-            background: var(--bg);
-            color: var(--fg);
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            font-weight: 600;
-            width: 100%;
-        }
-        
-        input[type="file"]::file-selector-button {
-            background: var(--border);
-            color: var(--bg);
-            border: none;
-            padding: 0.4rem 0.8rem;
-            border-radius: 2px;
-            margin-right: 1rem;
-            cursor: pointer;
-            font-weight: bold;
-            transition: transform 0.1s;
-        }
-        
-        input[type="file"]::file-selector-button:active {
-            transform: translateY(2px);
-        }
-
-        input[type="range"] {
-            -webkit-appearance: none;
-            width: 100%;
-            background: transparent;
-            margin: 5px 0;
-            touch-action: none;
-        }
-
-        input[type="range"]:focus { outline: none; }
-        
-        input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            height: 24px;
-            width: 24px;
-            border-radius: 50%;
-            background: #ff4747;
-            border: 3px solid var(--border);
-            cursor: pointer;
-            margin-top: -10px;
-            box-shadow: 2px 2px 0px var(--border);
-        }
-        
-        #wSlider::-webkit-slider-thumb {
-            background: #6272a4; 
-        }
-
-        input[type="range"]::-webkit-slider-runnable-track {
-            width: 100%;
-            height: 6px;
-            cursor: pointer;
-            background: var(--track);
-            border: 2px solid var(--border);
-            border-radius: 4px;
-        }
-
-        .btn-row {
-            display: flex;
-            gap: 1rem;
-            margin-top: 1rem;
-        }
-
-        .btn {
-            font-family: inherit;
-            background: var(--btn);
-            color: #111;
-            border: 3px solid var(--border);
-            padding: 0.8rem 1rem;
-            font-size: 1rem;
-            font-weight: 900;
-            text-transform: uppercase;
-            cursor: pointer;
-            box-shadow: 4px 4px 0px var(--border);
-            border-radius: 4px;
-            transition: all 0.1s ease;
-            flex: 1;
-            text-align: center;
-        }
-
-        .btn:active {
-            transform: translate(4px, 4px);
-            box-shadow: 0px 0px 0px var(--border);
-        }
-
-        .btn-alt {
-            background: var(--panel);
-            color: var(--fg);
-            flex: 0.5;
-        }
-
-        .btn[disabled] {
-            opacity: 0.5;
-            cursor: not-allowed;
-            pointer-events: none;
-        }
-
-        .cvs-wrap {
-            border: 3px solid var(--border);
-            background: var(--panel);
-            box-shadow: 8px 8px 0px var(--border);
-            border-radius: 8px;
-            padding: 0.5rem;
-            width: 100%;
-            max-width: 800px;
-            display: none;
-            margin-bottom: 2rem;
-            overflow: hidden;
-        }
-
-        .cvs-wrap.active {
-            display: block;
-        }
-
-        canvas {
-            display: block;
-            width: 100%;
-            height: auto;
-            border: 2px solid var(--border);
-            background: var(--cvs-bg);
-        }
+        :root { --bg: #f4f4f0; --fg: #111; --panel: #ffffff; --border: #111; --btn: #b9ff66; --cvs-bg: #eee; --track: #e0e0e0; }
+        [data-theme="dark"] { --bg: #121212; --fg: #f4f4f0; --panel: #1e1e1e; --border: #f4f4f0; --btn: #ff79c6; --cvs-bg: #333; --track: #444; }
+        * { box-sizing: border-box; scrollbar-width: none; -ms-overflow-style: none; }
+        *::-webkit-scrollbar { display: none; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif; background-color: var(--bg); color: var(--fg); display: flex; flex-direction: column; align-items: center; padding: 2rem 1rem; margin: 0; min-height: 100vh; transition: background-color 0.2s, color 0.2s; }
+        .header-wrap { display: flex; align-items: center; gap: 1rem; margin-bottom: 0.5rem; }
+        h1 { font-size: clamp(2rem, 8vw, 3.5rem); font-weight: 900; letter-spacing: -2px; margin: 0; text-align: center; }
+        #tBtn { background: var(--panel); color: var(--fg); border: 3px solid var(--border); font-size: 1.5rem; width: 50px; height: 50px; border-radius: 50%; cursor: pointer; box-shadow: 4px 4px 0px var(--border); transition: transform 0.1s; display: flex; align-items: center; justify-content: center; }
+        .sub-text { font-size: 1.1rem; font-weight: 500; margin-bottom: 2rem; text-align: center; border-bottom: 3px solid var(--border); padding-bottom: 0.5rem; display: inline-block; }
+        .pikachu-panel { background: var(--panel); border: 3px solid var(--border); border-radius: 8px; box-shadow: 8px 8px 0px var(--border); padding: 1.5rem; margin-bottom: 2rem; width: 100%; max-width: 480px; display: flex; flex-direction: column; gap: 1.2rem; }
+        label { display: flex; flex-direction: column; font-weight: 800; font-size: 0.85rem; text-transform: uppercase; gap: 8px; }
+        input[type="range"] { -webkit-appearance: none; width: 100%; background: transparent; margin: 15px 0; cursor: pointer; }
+        input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; height: 24px; width: 24px; border-radius: 50%; background: #ff4747; border: 3px solid var(--border); margin-top: -9px; box-shadow: 2px 2px 0px var(--border); }
+        input[type="range"]::-webkit-slider-runnable-track { width: 100%; height: 8px; background: var(--track); border: 2px solid var(--border); border-radius: 4px; }
+        .btn-row { display: flex; gap: 1rem; margin-top: 1rem; }
+        .btn { font-family: inherit; background: var(--btn); color: #111; border: 3px solid var(--border); padding: 0.8rem 1rem; font-weight: 900; text-transform: uppercase; cursor: pointer; box-shadow: 4px 4px 0px var(--border); border-radius: 4px; flex: 1; text-align: center; }
+        .btn-alt { background: var(--panel); color: var(--fg); flex: 0.5; }
+        .cvs-wrap { border: 3px solid var(--border); background: var(--panel); box-shadow: 8px 8px 0px var(--border); border-radius: 8px; padding: 0.5rem; width: 100%; max-width: 800px; display: none; margin-bottom: 2rem; overflow: hidden; }
+        .cvs-wrap.active { display: block; }
+        canvas { display: block; width: 100%; height: auto; border: 2px solid var(--border); background: var(--cvs-bg); }
     </style>
 </head>
 <body>
-
     <div class="header-wrap">
+        <svg width="50" height="50" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><rect width="100" height="100" rx="20" fill="#111"/><path d="M30 20 L50 10 L70 20 M30 80 L50 90 L70 80" stroke="#b9ff66" stroke-width="8" fill="none" stroke-linecap="round"/><rect x="35" y="30" width="30" height="40" fill="none" stroke="#b9ff66" stroke-width="6" rx="5"/></svg>
         <h1>Forehead Stretcher</h1>
         <button id="tBtn">🌙</button>
     </div>
     <p class="sub-text">Expand your mind (literally).</p>
-
     <div class="pikachu-panel">
-        <label>
-            1. Select an Image
-            <input type="file" id="fileIn" accept="image/*">
-        </label>
-        
-        <label>
-            2. Forehead Starting Point
-            <input type="range" id="ySlider" min="0" max="100" value="25">
-        </label>
-        
-        <label>
-            3. Vertical Stretch
-            <input type="range" id="sSlider" min="1" max="5" step="0.1" value="1">
-        </label>
-
-        <label>
-            4. Alien Mode (Width)
-            <input type="range" id="wSlider" min="0.5" max="3" step="0.1" value="1">
-        </label>
-
-        <label class="check-wrap">
-            <input type="checkbox" id="guideCb" checked>
-            Show red dotted guide line
-        </label>
-
+        <label>1. Select an Image <input type="file" id="fileIn" accept="image/*"></label>
+        <label>2. Forehead Starting Point <input type="range" id="ySlider" min="0" max="100" value="25"></label>
+        <label>3. Vertical Stretch <input type="range" id="sSlider" min="1" max="5" step="0.1" value="1"></label>
+        <label>4. Alien Mode (Width) <input type="range" id="wSlider" min="0.5" max="3" step="0.1" value="1"></label>
+        <label style="flex-direction:row; align-items:center; cursor:pointer;"><input type="checkbox" id="guideCb" checked style="margin-right:10px;"> Show guide line</label>
         <div class="btn-row">
             <button class="btn btn-alt" id="rstBtn" disabled>Reset</button>
             <button class="btn" id="dlBtn" disabled>💾 Save Image</button>
         </div>
     </div>
-
-    <div class="cvs-wrap" id="wrap">
-        <canvas id="cvs"></canvas>
-    </div>
-
+    <div class="cvs-wrap" id="wrap"><canvas id="cvs"></canvas></div>
     <script>
-        const fileIn = document.getElementById('fileIn');
-        const ySlider = document.getElementById('ySlider');
-        const sSlider = document.getElementById('sSlider');
-        const wSlider = document.getElementById('wSlider');
-        const guideCb = document.getElementById('guideCb');
-        const dlBtn = document.getElementById('dlBtn');
-        const rstBtn = document.getElementById('rstBtn');
-        const tBtn = document.getElementById('tBtn');
-        const cvs = document.getElementById('cvs');
-        const wrap = document.getElementById('wrap');
-        const ctx = cvs.getContext('2d');
-
-        let pikachu = null;
-        let sW = 0;
-        let sH = 0;
-        let isCoolingDown = false;
-
-        tBtn.addEventListener('click', () => {
-            const mode = document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-            document.body.setAttribute('data-theme', mode);
-            tBtn.innerText = mode === 'dark' ? '☀️' : '🌙';
-        });
-
-        fileIn.addEventListener('click', function() {
-            this.value = null; 
-        });
-
-        fileIn.addEventListener('change', e => {
-            const file = e.target.files[0];
-            if(!file) return;
-            
-            const maxMb = 100 * 1024 * 1024;
-            if(file.size > maxMb) {
-                alert("Whoa there! That file is huge (over 100MB). Upload something smaller so your browser doesn't explode.");
-                e.target.value = null;
-                return;
-            }
-
-            const reader = new FileReader();
-            reader.onload = ev => {
-                const img = new Image();
-                img.onload = () => {
-                    pikachu = img;
-                    
-                    const maxW = 800;
-                    let ratio = 1;
-                    if (img.width > maxW) {
-                        ratio = maxW / img.width;
-                    }
-                    
-                    sW = img.width * ratio;
-                    sH = img.height * ratio;
-
-                    dlBtn.removeAttribute('disabled');
-                    rstBtn.removeAttribute('disabled');
-
-                    nukeParams();
-                    wrap.classList.add('active');
-                }
-                img.src = ev.target.result;
-            }
-            reader.readAsDataURL(file);
-        });
-
-        ySlider.addEventListener('input', () => renderPikachu(false));
-        sSlider.addEventListener('input', () => renderPikachu(false));
-        wSlider.addEventListener('input', () => renderPikachu(false));
-        guideCb.addEventListener('change', () => renderPikachu(false));
-
-        rstBtn.addEventListener('click', nukeParams);
-
-        function nukeParams() {
-            sSlider.value = 1;
-            wSlider.value = 1;
-            ySlider.value = 25;
-            guideCb.checked = true;
-            renderPikachu(false);
-        }
-
-        function renderPikachu(isExport) {
+        const fileIn = document.getElementById('fileIn'), ySlider = document.getElementById('ySlider'), sSlider = document.getElementById('sSlider'), wSlider = document.getElementById('wSlider'), guideCb = document.getElementById('guideCb'), dlBtn = document.getElementById('dlBtn'), rstBtn = document.getElementById('rstBtn'), tBtn = document.getElementById('tBtn'), cvs = document.getElementById('cvs'), wrap = document.getElementById('wrap'), ctx = cvs.getContext('2d');
+        let pikachu = null, sW = 0, sH = 0, isCoolingDown = false;
+        tBtn.addEventListener('click', () => { const mode = document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'; document.body.setAttribute('data-theme', mode); tBtn.innerText = mode === 'dark' ? '☀️' : '🌙'; });
+        fileIn.addEventListener('change', e => { const f = e.target.files[0]; if(!f) return; if(f.size > 10*1024*1024) { alert("File too big!"); return; } const r = new FileReader(); r.onload = ev => { const img = new Image(); img.onload = () => { pikachu = img; sW = img.width > 800 ? 800 : img.width; sH = img.height * (sW/img.width); dlBtn.disabled = rstBtn.disabled = false; nuke(); wrap.classList.add('active'); }; img.src = ev.target.result; }; r.readAsDataURL(f); });
+        const nuke = () => { sSlider.value = 1; wSlider.value = 1; ySlider.value = 25; render(false); };
+        function render(isExp) {
             if (!pikachu) return;
-
-            const sm = parseFloat(sSlider.value);
-            const wm = parseFloat(wSlider.value);
-            const cutY = sH * (parseFloat(ySlider.value) / 100);
-
-            const newTopH = cutY * sm;
-            const botH = sH - cutY;
-            
-            cvs.width = sW;
-            cvs.height = newTopH + botH;
-
-            ctx.clearRect(0, 0, cvs.width, cvs.height);
-
-            const tw = cvs.width * wm;
-            const tx = (cvs.width - tw) / 2;
-            const origCut = pikachu.height * (parseFloat(ySlider.value) / 100);
-            const origBot = pikachu.height - origCut;
-
-            ctx.drawImage(pikachu, 0, 0, pikachu.width, origCut, tx, 0, tw, newTopH);
-            ctx.drawImage(pikachu, 0, origCut, pikachu.width, origBot, 0, newTopH, cvs.width, botH);
-
-            if (guideCb.checked && !isExport) {
-                ctx.beginPath();
-                ctx.moveTo(0, newTopH);
-                ctx.lineTo(cvs.width, newTopH);
-                ctx.strokeStyle = '#ff4747'; 
-                ctx.lineWidth = 3;
-                ctx.setLineDash([10, 8]); 
-                ctx.stroke();
-                ctx.setLineDash([]); 
-            }
+            const sm = parseFloat(sSlider.value), wm = parseFloat(wSlider.value), cutY = sH * (parseFloat(ySlider.value)/100);
+            cvs.width = sW; cvs.height = (cutY * sm) + (sH - cutY);
+            ctx.clearRect(0,0,cvs.width,cvs.height);
+            const tw = cvs.width * wm, tx = (cvs.width - tw)/2, oC = pikachu.height * (parseFloat(ySlider.value)/100);
+            ctx.drawImage(pikachu, 0,0,pikachu.width, oC, tx, 0, tw, cutY * sm);
+            ctx.drawImage(pikachu, 0, oC, pikachu.width, pikachu.height - oC, 0, cutY * sm, cvs.width, sH - cutY);
+            if (guideCb.checked && !isExp) { ctx.beginPath(); ctx.moveTo(0, cutY*sm); ctx.lineTo(cvs.width, cutY*sm); ctx.strokeStyle = '#ff4747'; ctx.lineWidth = 3; ctx.setLineDash([10,8]); ctx.stroke(); }
         }
-
-        dlBtn.addEventListener('click', () => {
-            if (!pikachu || isCoolingDown) return;
-            
-            isCoolingDown = true;
-            const ogText = dlBtn.innerText;
-            dlBtn.innerText = 'WAIT...';
-            dlBtn.style.opacity = '0.7';
-
-            renderPikachu(true);
-            const a = document.createElement('a');
-            a.download = 'mega-forehead.png';
-            a.href = cvs.toDataURL('image/png');
-            a.click();
-            renderPikachu(false);
-
-            setTimeout(() => {
-                isCoolingDown = false;
-                dlBtn.innerText = ogText;
-                dlBtn.style.opacity = '1';
-            }, 3000);
-        });
+        [ySlider, sSlider, wSlider, guideCb].forEach(el => el.addEventListener('input', () => render(false)));
+        rstBtn.addEventListener('click', nuke);
+        dlBtn.addEventListener('click', () => { if(isCoolingDown) return; isCoolingDown = true; render(true); const a = document.createElement('a'); a.download = 'mega-forehead.png'; a.href = cvs.toDataURL('image/png'); a.click(); render(false); setTimeout(() => isCoolingDown = false, 3000); });
     </script>
 </body>
 </html>

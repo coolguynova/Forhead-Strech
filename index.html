@@ -22,13 +22,15 @@
     <p class="sub-text">Expand your mind (literally).</p>
 
     <div class="pikachu-panel">
-        <label>
-            1. Select an Image
+        
+        <label>1. Select Image or Snap Selfie</label>
+        <div class="action-row">
             <input type="file" id="fileIn" accept="image/*">
-        </label>
+            <button class="btn btn-alt" id="camBtn" style="flex: 0.4;">📸 Selfie</button>
+        </div>
         
         <label>
-            2. Forehead Starting Point
+            2. Forehead Cut Line
             <input type="range" id="ySlider" min="0" max="100" value="25">
         </label>
         
@@ -42,7 +44,7 @@
             <input type="range" id="wSlider" min="0.5" max="3" step="0.1" value="1">
         </label>
 
-        <label>5. Add Accessories (Drag them around)</label>
+        <label>5. Stickers (Drag to move)</label>
         <div class="sticker-bar">
             <button class="sticker-btn">🧠</button>
             <button class="sticker-btn">👁️</button>
@@ -51,9 +53,15 @@
             <button class="sticker-btn" id="clearStickers" style="font-size: 0.8rem; flex: 1;">Clear</button>
         </div>
 
-        <div class="options-row">
+        <label>6. Meme Text</label>
+        <input type="text" id="topText" class="text-input" placeholder="TOP TEXT">
+        <input type="text" id="botText" class="text-input" placeholder="BOTTOM TEXT">
+
+        <div class="options-grid">
             <label class="check-wrap"><input type="checkbox" id="guideCb" checked> Guide Line</label>
             <label class="check-wrap"><input type="checkbox" id="sfxCb"> 🔊 SFX</label>
+            <label class="check-wrap"><input type="checkbox" id="jelloCb"> 🪼 Jello Mode</label>
+            <label class="check-wrap"><input type="checkbox" id="fryCb"> 🍟 Deep Fry</label>
         </div>
 
         <div class="btn-row">
@@ -61,6 +69,8 @@
             <button class="btn" id="dlBtn" disabled>💾 Export Polaroid</button>
         </div>
     </div>
+
+    <video id="webcamVideo" autoplay playsinline style="display:none;"></video>
 
     <div class="cvs-wrap" id="wrap">
         <canvas id="cvs"></canvas>

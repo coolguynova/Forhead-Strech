@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Forehead Stretcher</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="header-wrap">
+        <h1>Forehead Stretcher</h1>
+        <button id="tBtn">🌙</button>
+    </div>
+    <div class="pikachu-panel">
+        <label>1. Select Image <input type="file" id="fileIn" accept="image/*"></label>
+        <label>2. Forehead Point <input type="range" id="ySlider" min="0" max="100" value="25"></label>
+        <label>3. Vertical Stretch <input type="range" id="sSlider" min="1" max="5" step="0.1" value="1"></label>
+        <label>4. Width Stretch <input type="range" id="wSlider" min="0.5" max="3" step="0.1" value="1"></label>
+        <label><input type="checkbox" id="guideCb" checked> Show guide line</label>
+        <div class="btn-row">
+            <button class="btn btn-alt" id="rstBtn" disabled>Reset</button>
+            <button class="btn" id="dlBtn" disabled>Save Image</button>
+        </div>
+    </div>
+    <div class="cvs-wrap" id="wrap"><canvas id="cvs"></canvas></div>
+    <script src="app.js"></script>
+</body>
+</html>

@@ -1,69 +1,37 @@
-// Grab all the UI elements
-const fileIn = document.getElementById('fileIn');
-const ySlider = document.getElementById('ySlider');
-const sSlider = document.getElementById('sSlider');
-const wSlider = document.getElementById('wSlider');
-const guideCb = document.getElementById('guideCb');
-const dlBtn = document.getElementById('dlBtn');
-const rstBtn = document.getElementById('rstBtn');
-const tBtn = document.getElementById('tBtn');
-const cvs = document.getElementById('cvs');
-const wrap = document.getElementById('wrap');
-const ctx = cvs.getContext('2d');
+const fileIn = document.getElementById('fileIn'), ySlider = document.getElementById('ySlider'), sSlider = document.getElementById('sSlider'), wSlider = document.getElementById('wSlider'), guideCb = document.getElementById('guideCb'), sfxCb = document.getElementById('sfxCb'), dlBtn = document.getElementById('dlBtn'), rstBtn = document.getElementById('rstBtn'), tBtn = document.getElementById('tBtn'), cvs = document.getElementById('cvs'), wrap = document.getElementById('wrap'), ctx = cvs.getContext('2d');
 
-// State variables
-let pikachu = null; // Holds the image object
-let sW = 0; // Scaled Width
-let sH = 0; // Scaled Height
-let isCoolingDown = false;
+let pikachu = null, sW = 0, sH = 0, isCoolingDown = false;
+let stickers = [];
+let draggingSticker = null;
+let audioCtx = null;
 
 // Theme Toggle
 tBtn.addEventListener('click', () => {
-    const currentMode = document.body.getAttribute('data-theme');
-    const newMode = currentMode === 'dark' ? 'light' : 'dark';
-    document.body.setAttribute('data-theme', newMode);
-    tBtn.innerText = newMode === 'dark' ? '☀️' : '🌙';
+    const mode = document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    document.body.setAttribute('data-theme', mode);
+    tBtn.innerText = mode === 'dark' ? '☀️' : '🌙';
 });
 
-// Clear file input on click so you can re-upload the same file
-fileIn.addEventListener('click', function() {
-    this.value = null; 
-});
+fileIn.addEventListener('click', function() { this.value = null; });
 
-// Handle File Upload
+// Image Upload
 fileIn.addEventListener('change', e => {
     const file = e.target.files[0];
     if(!file) return;
-    
-    // File size limiter (10MB)
-    const maxMb = 10 * 1024 * 1024;
-    if(file.size > maxMb) {
-        alert("Whoa there! That file is huge (over 10MB). Upload something smaller so your browser doesn't explode.");
-        e.target.value = null;
-        return;
-    }
+    if(file.size > 10 * 1024 * 1024) return alert("File too big! (10MB max)");
 
     const reader = new FileReader();
     reader.onload = ev => {
         const img = new Image();
         img.onload = () => {
             pikachu = img;
-            
-            // Downscale huge images to a max width of 800px to prevent UI lag
             const maxW = 800;
-            let ratio = 1;
-            if (img.width > maxW) {
-                ratio = maxW / img.width;
-            }
-            
+            let ratio = img.width > maxW ? maxW / img.width : 1;
             sW = img.width * ratio;
             sH = img.height * ratio;
-
-            // Enable buttons and show canvas
             dlBtn.removeAttribute('disabled');
             rstBtn.removeAttribute('disabled');
             wrap.classList.add('active');
-            
             resetParams();
         }
         img.src = ev.target.result;
@@ -71,92 +39,179 @@ fileIn.addEventListener('change', e => {
     reader.readAsDataURL(file);
 });
 
-// Redraw when sliders change
-ySlider.addEventListener('input', () => drawStretchedImage(false));
-sSlider.addEventListener('input', () => drawStretchedImage(false));
-wSlider.addEventListener('input', () => drawStretchedImage(false));
-guideCb.addEventListener('change', () => drawStretchedImage(false));
+// Sound Effect Synthesizer
+function playSlideWhistle(value) {
+    if(!sfxCb.checked) return;
+    if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    if(audioCtx.state === 'suspended') audioCtx.resume();
+    
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    
+    osc.frequency.value = 200 + (value * 150); 
+    osc.type = 'sine';
+    
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    
+    osc.start();
+    gain.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + 0.1);
+    osc.stop(audioCtx.currentTime + 0.1);
+}
 
-// Reset Button Logic
+// Redraw events
+ySlider.addEventListener('input', () => drawStretchedImage());
+sSlider.addEventListener('input', (e) => { drawStretchedImage(); playSlideWhistle(e.target.value); });
+wSlider.addEventListener('input', () => drawStretchedImage());
+guideCb.addEventListener('change', () => drawStretchedImage());
+
 rstBtn.addEventListener('click', resetParams);
 
 function resetParams() {
-    sSlider.value = 1;
-    wSlider.value = 1;
-    ySlider.value = 25;
-    guideCb.checked = true;
-    drawStretchedImage(false);
+    sSlider.value = 1; wSlider.value = 1; ySlider.value = 25;
+    stickers = []; guideCb.checked = true;
+    drawStretchedImage();
 }
 
-// Main Drawing Function
-function drawStretchedImage(isExporting) {
+// Sticker Logic
+document.querySelectorAll('.sticker-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+        if(e.target.id === 'clearStickers') { stickers = []; } 
+        else {
+            stickers.push({ text: e.target.innerText, x: sW / 2, y: sH * 0.2, size: 60 });
+        }
+        drawStretchedImage();
+    });
+});
+
+// Dragging Stickers
+cvs.addEventListener('mousedown', e => {
+    const rect = cvs.getBoundingClientRect();
+    const scaleX = cvs.width / rect.width;
+    const scaleY = cvs.height / rect.height;
+    const mx = (e.clientX - rect.left) * scaleX;
+    const my = (e.clientY - rect.top) * scaleY;
+
+    for(let i = stickers.length - 1; i >= 0; i--) {
+        const s = stickers[i];
+        ctx.font = `${s.size}px Arial`;
+        const metrics = ctx.measureText(s.text);
+        if(mx > s.x - metrics.width/2 && mx < s.x + metrics.width/2 && my > s.y - s.size && my < s.y) {
+            draggingSticker = s;
+            break;
+        }
+    }
+});
+
+cvs.addEventListener('mousemove', e => {
+    if(!draggingSticker) return;
+    const rect = cvs.getBoundingClientRect();
+    draggingSticker.x = (e.clientX - rect.left) * (cvs.width / rect.width);
+    draggingSticker.y = (e.clientY - rect.top) * (cvs.height / rect.height);
+    drawStretchedImage();
+});
+
+cvs.addEventListener('mouseup', () => { draggingSticker = null; });
+cvs.addEventListener('mouseleave', () => { draggingSticker = null; });
+
+// Rendering Engine
+function drawStretchedImage(isExporting = false, targetCtx = ctx, targetWidth = cvs.width, targetHeight = cvs.height) {
     if (!pikachu) return;
 
-    const sm = parseFloat(sSlider.value); // Stretch Multiplier
-    const wm = parseFloat(wSlider.value); // Width Multiplier
-    
-    // Where is the cut happening based on the slider?
+    const sm = parseFloat(sSlider.value);
+    const wm = parseFloat(wSlider.value);
     const cutY = sH * (parseFloat(ySlider.value) / 100);
 
     const newTopH = cutY * sm;
     const botH = sH - cutY;
     
-    // Set canvas dimensions
-    cvs.width = sW;
-    cvs.height = newTopH + botH;
+    if(!isExporting) {
+        cvs.width = sW;
+        cvs.height = newTopH + botH;
+        targetWidth = cvs.width;
+        targetHeight = cvs.height;
+    }
 
-    ctx.clearRect(0, 0, cvs.width, cvs.height);
+    targetCtx.clearRect(0, 0, targetWidth, targetHeight);
 
-    // Alien Mode calculations
-    const tw = cvs.width * wm;
-    const tx = (cvs.width - tw) / 2;
+    const tw = targetWidth * wm;
+    const tx = (targetWidth - tw) / 2;
     const origCut = pikachu.height * (parseFloat(ySlider.value) / 100);
     const origBot = pikachu.height - origCut;
 
-    // Draw the Stretched Forehead (Top Half)
-    ctx.drawImage(pikachu, 0, 0, pikachu.width, origCut, tx, 0, tw, newTopH);
-    
-    // Draw the Normal Face (Bottom Half)
-    ctx.drawImage(pikachu, 0, origCut, pikachu.width, origBot, 0, newTopH, cvs.width, botH);
+    targetCtx.drawImage(pikachu, 0, 0, pikachu.width, origCut, tx, 0, tw, newTopH);
+    targetCtx.drawImage(pikachu, 0, origCut, pikachu.width, origBot, 0, newTopH, targetWidth, botH);
 
-    // Draw the Red Guide Line
-    if (guideCb.checked && !isExporting) {
-        ctx.beginPath();
-        ctx.moveTo(0, newTopH);
-        ctx.lineTo(cvs.width, newTopH);
-        ctx.strokeStyle = '#ff4747'; 
-        ctx.lineWidth = 3;
-        ctx.setLineDash([10, 8]); 
-        ctx.stroke();
-        ctx.setLineDash([]); 
+    targetCtx.textAlign = "center";
+    stickers.forEach(s => {
+        targetCtx.font = `${s.size}px Arial`;
+        targetCtx.fillText(s.text, s.x, s.y);
+    });
+
+    if (guideCb.checked && !isExporting && targetCtx === ctx) {
+        targetCtx.beginPath();
+        targetCtx.moveTo(0, newTopH);
+        targetCtx.lineTo(targetWidth, newTopH);
+        targetCtx.strokeStyle = '#ff4747'; 
+        targetCtx.lineWidth = 3;
+        targetCtx.setLineDash([10, 8]); 
+        targetCtx.stroke();
+        targetCtx.setLineDash([]); 
     }
 }
 
-// Download Button Logic
+// Side-by-Side Polaroid Export
 dlBtn.addEventListener('click', () => {
     if (!pikachu || isCoolingDown) return;
-    
     isCoolingDown = true;
-    const ogText = dlBtn.innerText;
     dlBtn.innerText = 'WAIT...';
-    dlBtn.style.opacity = '0.7';
-
-    // Draw without red line
-    drawStretchedImage(true);
     
-    // Trigger download
+    const sm = parseFloat(sSlider.value);
+    const cutY = sH * (parseFloat(ySlider.value) / 100);
+    const stretchedH = (cutY * sm) + (sH - cutY);
+    
+    const exportCvs = document.createElement('canvas');
+    const exportCtx = exportCvs.getContext('2d');
+    
+    const padding = 40;
+    const finalImageH = Math.max(sH, stretchedH);
+    exportCvs.width = (sW * 2) + (padding * 3);
+    exportCvs.height = finalImageH + (padding * 3) + 60;
+
+    // Background
+    exportCtx.fillStyle = '#f4f4f0';
+    exportCtx.fillRect(0, 0, exportCvs.width, exportCvs.height);
+    
+    // Left (Original)
+    exportCtx.fillStyle = '#111';
+    exportCtx.fillRect(padding - 5, padding - 5, sW + 10, sH + 10);
+    exportCtx.drawImage(pikachu, padding, padding, sW, sH);
+    
+    // Right (Stretched)
+    const rightStartX = sW + (padding * 2);
+    exportCtx.fillRect(rightStartX - 5, padding - 5, sW + 10, stretchedH + 10);
+    
+    exportCtx.save();
+    exportCtx.translate(rightStartX, padding);
+    drawStretchedImage(true, exportCtx, sW, stretchedH);
+    exportCtx.restore();
+
+    // Text & Watermark
+    exportCtx.fillStyle = '#111';
+    exportCtx.font = 'bold 30px Arial';
+    exportCtx.textAlign = "center";
+    exportCtx.fillText("BEFORE", padding + (sW/2), sH + padding + 40);
+    exportCtx.fillText("AFTER", rightStartX + (sW/2), stretchedH + padding + 40);
+    exportCtx.font = 'bold 20px Arial';
+    exportCtx.fillText("🧠 Created with Forehead Stretcher Pro", exportCvs.width / 2, exportCvs.height - 20);
+
     const a = document.createElement('a');
-    a.download = 'mega-forehead.png';
-    a.href = cvs.toDataURL('image/png');
+    a.download = 'forehead-polaroid.png';
+    a.href = exportCvs.toDataURL('image/png');
     a.click();
     
-    // Redraw with red line
-    drawStretchedImage(false);
-
-    // 3 Second Cooldown to prevent spam
     setTimeout(() => {
         isCoolingDown = false;
-        dlBtn.innerText = ogText;
-        dlBtn.style.opacity = '1';
-    }, 3000);
+        dlBtn.innerText = '💾 Export Polaroid';
+    }, 2000);
 });

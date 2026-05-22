@@ -65,11 +65,12 @@
         input[type="range"]::-webkit-slider-runnable-track { width: 100%; height: 8px; background: var(--track); border: 2px solid var(--border); border-radius: 4px; }
         input[type="range"]::-moz-range-track { width: 100%; height: 8px; background: var(--track); border: 2px solid var(--border); border-radius: 4px; }
 
-        /* --- TEXT INPUTS --- */
+        /* --- TEXT INPUTS & SELECTS --- */
         .text-input {
             width: 100%; padding: 0.8rem; font-family: Impact, sans-serif; font-size: 1.2rem;
             border: 2px solid var(--border); border-radius: 4px; background: var(--bg); color: var(--fg);
         }
+        select.text-input { font-family: inherit; font-size: 1rem; font-weight: bold; cursor: pointer; }
 
         /* --- STICKERS & OPTIONS --- */
         .sticker-bar { display: flex; gap: 10px; margin-bottom: 5px; }
@@ -87,7 +88,7 @@
         input[type="checkbox"] { width: 20px; height: 20px; accent-color: #ff4747; border: 2px solid var(--border); cursor: pointer; }
 
         /* --- BUTTONS --- */
-        .btn-row { display: flex; gap: 1rem; margin-top: 1rem; }
+        .btn-row { display: flex; gap: 1rem; margin-top: 0.5rem; }
         .btn {
             font-family: inherit; background: var(--btn); color: #111; border: 3px solid var(--border);
             padding: 0.8rem 1rem; font-size: 1rem; font-weight: 900; text-transform: uppercase;
@@ -173,16 +174,22 @@
         <input type="text" id="topText" class="text-input" placeholder="TOP TEXT" style="margin-bottom: 8px;">
         <input type="text" id="botText" class="text-input" placeholder="BOTTOM TEXT">
 
-        <div class="options-grid">
+        <div class="options-grid" style="margin-bottom: 10px;">
             <label class="check-wrap"><input type="checkbox" id="guideCb" checked> Guide Line</label>
             <label class="check-wrap"><input type="checkbox" id="sfxCb"> 🔊 SFX</label>
             <label class="check-wrap"><input type="checkbox" id="jelloCb"> 🪼 Jello Mode</label>
             <label class="check-wrap"><input type="checkbox" id="fryCb"> 🍟 Deep Fry</label>
         </div>
 
+        <label>7. Export Style</label>
+        <select id="exportMode" class="text-input" style="margin-bottom: 5px;">
+            <option value="polaroid">Polaroid (Before & After)</option>
+            <option value="single">Just the Stretched Image</option>
+        </select>
+
         <div class="btn-row">
             <button class="btn btn-alt" id="rstBtn" disabled>Reset</button>
-            <button class="btn" id="dlBtn" disabled>💾 Export Polaroid</button>
+            <button class="btn" id="dlBtn" disabled>💾 Export Image</button>
         </div>
     </div>
 
@@ -199,6 +206,7 @@
             guide: document.getElementById('guideCb'), sfx: document.getElementById('sfxCb'),
             jello: document.getElementById('jelloCb'), fry: document.getElementById('fryCb'),
             topText: document.getElementById('topText'), botText: document.getElementById('botText'),
+            exportMode: document.getElementById('exportMode'),
             dlBtn: document.getElementById('dlBtn'), rstBtn: document.getElementById('rstBtn'),
             tBtn: document.getElementById('tBtn'), cvs: document.getElementById('cvs'),
             wrap: document.getElementById('wrap'), video: document.getElementById('webcamVideo')
@@ -436,7 +444,7 @@
             }
         }
 
-        // --- POLAROID EXPORT ---
+        // --- EXPORT LOGIC ---
         UI.dlBtn.onclick = () => {
             if (!pikachu || isCoolingDown) return;
             isCoolingDown = true;
@@ -449,44 +457,59 @@
             const exportCvs = document.createElement('canvas');
             const exportCtx = exportCvs.getContext('2d');
             
-            const padding = 40;
-            const finalImageH = Math.max(sH, stretchedH);
-            exportCvs.width = (sW * 2) + (padding * 3);
-            exportCvs.height = finalImageH + (padding * 3) + 60;
+            const mode = UI.exportMode.value;
 
-            exportCtx.fillStyle = '#f4f4f0'; exportCtx.fillRect(0, 0, exportCvs.width, exportCvs.height);
-            
-            exportCtx.fillStyle = '#111';
-            exportCtx.fillRect(padding - 5, padding - 5, sW + 10, sH + 10);
-            
-            if(UI.fry.checked) exportCtx.filter = 'contrast(250%) saturate(300%) sepia(50%) hue-rotate(-20deg)';
-            exportCtx.drawImage(pikachu, padding, padding, sW, sH);
-            exportCtx.filter = 'none';
-            
-            const rightStartX = sW + (padding * 2);
-            exportCtx.fillRect(rightStartX - 5, padding - 5, sW + 10, stretchedH + 10);
-            
-            exportCtx.save();
-            exportCtx.translate(rightStartX, padding);
-            drawStretchedImage(true, exportCtx, sW, stretchedH);
-            exportCtx.restore();
+            if (mode === 'polaroid') {
+                const padding = 40;
+                const finalImageH = Math.max(sH, stretchedH);
+                exportCvs.width = (sW * 2) + (padding * 3);
+                exportCvs.height = finalImageH + (padding * 3) + 60;
 
-            exportCtx.fillStyle = '#111'; exportCtx.font = 'bold 30px Arial'; exportCtx.textAlign = "center";
-            exportCtx.fillText("BEFORE", padding + (sW/2), sH + padding + 40);
-            exportCtx.fillText("AFTER", rightStartX + (sW/2), stretchedH + padding + 40);
-            exportCtx.font = 'bold 20px Arial';
-            exportCtx.fillText("🧠 Created with Forehead Stretcher Pro", exportCvs.width / 2, exportCvs.height - 20);
+                exportCtx.fillStyle = '#f4f4f0'; exportCtx.fillRect(0, 0, exportCvs.width, exportCvs.height);
+                
+                exportCtx.fillStyle = '#111';
+                exportCtx.fillRect(padding - 5, padding - 5, sW + 10, sH + 10);
+                
+                if(UI.fry.checked) exportCtx.filter = 'contrast(250%) saturate(300%) sepia(50%) hue-rotate(-20deg)';
+                exportCtx.drawImage(pikachu, padding, padding, sW, sH);
+                exportCtx.filter = 'none';
+                
+                const rightStartX = sW + (padding * 2);
+                exportCtx.fillRect(rightStartX - 5, padding - 5, sW + 10, stretchedH + 10);
+                
+                exportCtx.save();
+                exportCtx.translate(rightStartX, padding);
+                drawStretchedImage(true, exportCtx, sW, stretchedH);
+                exportCtx.restore();
 
-            const a = document.createElement('a');
-            a.download = 'forehead-polaroid.png';
-            a.href = exportCvs.toDataURL('image/png');
-            a.click();
+                exportCtx.fillStyle = '#111'; exportCtx.font = 'bold 30px Arial'; exportCtx.textAlign = "center";
+                exportCtx.fillText("BEFORE", padding + (sW/2), sH + padding + 40);
+                exportCtx.fillText("AFTER", rightStartX + (sW/2), stretchedH + padding + 40);
+                exportCtx.font = 'bold 20px Arial';
+                exportCtx.fillText("🧠 Created with Forehead Stretcher Pro", exportCvs.width / 2, exportCvs.height - 20);
+
+                const a = document.createElement('a');
+                a.download = 'forehead-polaroid.png';
+                a.href = exportCvs.toDataURL('image/png');
+                a.click();
+            } else {
+                // SINGLE IMAGE MODE
+                exportCvs.width = sW;
+                exportCvs.height = stretchedH;
+                
+                drawStretchedImage(true, exportCtx, sW, stretchedH);
+
+                const a = document.createElement('a');
+                a.download = 'forehead-stretched.png';
+                a.href = exportCvs.toDataURL('image/png');
+                a.click();
+            }
             
             fireConfetti(); 
 
             setTimeout(() => {
                 isCoolingDown = false;
-                UI.dlBtn.innerText = '💾 Export Polaroid';
+                UI.dlBtn.innerText = '💾 Export Image';
             }, 2000);
         };
     </script>

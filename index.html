@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Forehead Stretcher</title>
+    <title>Forehead Stretcher Pro</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23111'/><path d='M30 20 L50 10 L70 20 M30 80 L50 90 L70 80' stroke='%23b9ff66' stroke-width='8' fill='none' stroke-linecap='round'/><rect x='35' y='30' width='30' height='40' fill='none' stroke='%23b9ff66' stroke-width='6' rx='5'/></svg>">
     <link rel="stylesheet" href="style.css">
 </head>
@@ -33,8 +33,8 @@
         </label>
         
         <label>
-            3. Vertical Stretch
-            <input type="range" id="sSlider" min="1" max="5" step="0.1" value="1">
+            3. Vertical Stretch (Now goes backwards!)
+            <input type="range" id="sSlider" min="0.1" max="5" step="0.1" value="1">
         </label>
 
         <label>
@@ -42,14 +42,23 @@
             <input type="range" id="wSlider" min="0.5" max="3" step="0.1" value="1">
         </label>
 
-        <label class="check-wrap">
-            <input type="checkbox" id="guideCb" checked>
-            Show red dotted guide line
-        </label>
+        <label>5. Add Accessories (Drag them around)</label>
+        <div class="sticker-bar">
+            <button class="sticker-btn">🧠</button>
+            <button class="sticker-btn">👁️</button>
+            <button class="sticker-btn">👑</button>
+            <button class="sticker-btn">👽</button>
+            <button class="sticker-btn" id="clearStickers" style="font-size: 0.8rem; flex: 1;">Clear</button>
+        </div>
+
+        <div class="options-row">
+            <label class="check-wrap"><input type="checkbox" id="guideCb" checked> Guide Line</label>
+            <label class="check-wrap"><input type="checkbox" id="sfxCb"> 🔊 SFX</label>
+        </div>
 
         <div class="btn-row">
             <button class="btn btn-alt" id="rstBtn" disabled>Reset</button>
-            <button class="btn" id="dlBtn" disabled>💾 Save Image</button>
+            <button class="btn" id="dlBtn" disabled>💾 Export Polaroid</button>
         </div>
     </div>
 

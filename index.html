@@ -2,26 +2,61 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Forehead Stretcher</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23111'/><path d='M30 20 L50 10 L70 20 M30 80 L50 90 L70 80' stroke='%23b9ff66' stroke-width='8' fill='none' stroke-linecap='round'/><rect x='35' y='30' width='30' height='40' fill='none' stroke='%23b9ff66' stroke-width='6' rx='5'/></svg>">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
     <div class="header-wrap">
+        <svg width="50" height="50" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <rect width="100" height="100" rx="20" fill="#111"/>
+            <path d="M30 20 L50 10 L70 20 M30 80 L50 90 L70 80" stroke="#b9ff66" stroke-width="8" fill="none" stroke-linecap="round"/>
+            <rect x="35" y="30" width="30" height="40" fill="none" stroke="#b9ff66" stroke-width="6" rx="5"/>
+        </svg>
         <h1>Forehead Stretcher</h1>
         <button id="tBtn">🌙</button>
     </div>
+    
+    <p class="sub-text">Expand your mind (literally).</p>
+
     <div class="pikachu-panel">
-        <label>1. Select Image <input type="file" id="fileIn" accept="image/*"></label>
-        <label>2. Forehead Point <input type="range" id="ySlider" min="0" max="100" value="25"></label>
-        <label>3. Vertical Stretch <input type="range" id="sSlider" min="1" max="5" step="0.1" value="1"></label>
-        <label>4. Width Stretch <input type="range" id="wSlider" min="0.5" max="3" step="0.1" value="1"></label>
-        <label><input type="checkbox" id="guideCb" checked> Show guide line</label>
+        <label>
+            1. Select an Image
+            <input type="file" id="fileIn" accept="image/*">
+        </label>
+        
+        <label>
+            2. Forehead Starting Point
+            <input type="range" id="ySlider" min="0" max="100" value="25">
+        </label>
+        
+        <label>
+            3. Vertical Stretch
+            <input type="range" id="sSlider" min="1" max="5" step="0.1" value="1">
+        </label>
+
+        <label>
+            4. Alien Mode (Width)
+            <input type="range" id="wSlider" min="0.5" max="3" step="0.1" value="1">
+        </label>
+
+        <label class="check-wrap">
+            <input type="checkbox" id="guideCb" checked>
+            Show red dotted guide line
+        </label>
+
         <div class="btn-row">
             <button class="btn btn-alt" id="rstBtn" disabled>Reset</button>
-            <button class="btn" id="dlBtn" disabled>Save Image</button>
+            <button class="btn" id="dlBtn" disabled>💾 Save Image</button>
         </div>
     </div>
-    <div class="cvs-wrap" id="wrap"><canvas id="cvs"></canvas></div>
+
+    <div class="cvs-wrap" id="wrap">
+        <canvas id="cvs"></canvas>
+    </div>
+
     <script src="app.js"></script>
 </body>
 </html>

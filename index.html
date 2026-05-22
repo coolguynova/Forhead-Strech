@@ -5,7 +5,96 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Forehead Stretcher Pro</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23111'/><path d='M30 20 L50 10 L70 20 M30 80 L50 90 L70 80' stroke='%23b9ff66' stroke-width='8' fill='none' stroke-linecap='round'/><rect x='35' y='30' width='30' height='40' fill='none' stroke='%23b9ff66' stroke-width='6' rx='5'/></svg>">
-    <link rel="stylesheet" href="style.css">
+    
+    <style>
+        /* --- VARIABLES & THEME --- */
+        :root { --bg: #f4f4f0; --fg: #111; --panel: #ffffff; --border: #111; --btn: #b9ff66; --cvs-bg: #eee; --track: #e0e0e0; }
+        [data-theme="dark"] { --bg: #121212; --fg: #f4f4f0; --panel: #1e1e1e; --border: #f4f4f0; --btn: #ff79c6; --cvs-bg: #333; --track: #444; }
+
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
+            background-color: var(--bg); color: var(--fg);
+            display: flex; flex-direction: column; align-items: center;
+            padding: 2rem 1rem; margin: 0; min-height: 100vh;
+            transition: background-color 0.2s, color 0.2s;
+            overflow-x: hidden;
+        }
+
+        /* --- HEADER & TYPOGRAPHY --- */
+        .header-wrap { display: flex; align-items: center; gap: 1rem; margin-bottom: 0.5rem; }
+        h1 { font-size: clamp(2rem, 8vw, 3.5rem); font-weight: 900; letter-spacing: -2px; margin: 0; text-align: center; line-height: 1.1; }
+        .sub-text { font-size: 1.1rem; font-weight: 500; margin-bottom: 2rem; border-bottom: 3px solid var(--border); padding-bottom: 0.5rem; display: inline-block; }
+
+        #tBtn {
+            background: var(--panel); color: var(--fg); border: 3px solid var(--border);
+            font-size: 1.5rem; width: 50px; height: 50px; border-radius: 50%; cursor: pointer;
+            box-shadow: 4px 4px 0px var(--border); transition: transform 0.1s;
+        }
+        #tBtn:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0px var(--border); }
+
+        /* --- MAIN PANEL --- */
+        .pikachu-panel {
+            background: var(--panel); border: 3px solid var(--border); border-radius: 8px;
+            box-shadow: 8px 8px 0px var(--border); padding: 1.5rem; margin-bottom: 2rem;
+            width: 100%; max-width: 480px; display: flex; flex-direction: column; gap: 1.2rem;
+        }
+
+        label { display: flex; flex-direction: column; font-weight: 800; font-size: 0.85rem; text-transform: uppercase; gap: 8px; }
+        .check-wrap { flex-direction: row; align-items: center; cursor: pointer; margin-top: 0.5rem; }
+        input[type="checkbox"] { width: 20px; height: 20px; accent-color: #ff4747; border: 2px solid var(--border); cursor: pointer; }
+
+        input[type="file"] {
+            font-family: inherit; border: 2px solid var(--border); padding: 0.5rem;
+            background: var(--bg); color: var(--fg); border-radius: 4px; cursor: pointer; font-weight: 600; width: 100%;
+        }
+        input[type="file"]::file-selector-button {
+            background: var(--border); color: var(--bg); border: none; padding: 0.4rem 0.8rem;
+            border-radius: 2px; margin-right: 1rem; cursor: pointer; font-weight: bold;
+        }
+
+        /* --- SLIDERS --- */
+        input[type="range"] { -webkit-appearance: none; width: 100%; background: transparent; margin: 15px 0; cursor: pointer; }
+        input[type="range"]:focus { outline: none; }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none; height: 24px; width: 24px; border-radius: 50%;
+            background: #ff4747; border: 3px solid var(--border); margin-top: -9px; box-shadow: 2px 2px 0px var(--border);
+        }
+        #wSlider::-webkit-slider-thumb { background: #6272a4; }
+        input[type="range"]::-webkit-slider-runnable-track { width: 100%; height: 8px; background: var(--track); border: 2px solid var(--border); border-radius: 4px; }
+
+        /* --- STICKERS --- */
+        .sticker-bar { display: flex; gap: 10px; margin-bottom: 5px; }
+        .sticker-btn {
+            background: var(--bg); border: 2px solid var(--border); border-radius: 4px;
+            font-size: 1.5rem; padding: 5px; cursor: pointer; box-shadow: 2px 2px 0px var(--border); transition: transform 0.1s;
+        }
+        .sticker-btn:active { transform: translate(2px, 2px); box-shadow: 0px 0px 0px var(--border); }
+
+        /* --- BUTTONS --- */
+        .btn-row { display: flex; gap: 1rem; margin-top: 1rem; }
+        .btn {
+            font-family: inherit; background: var(--btn); color: #111; border: 3px solid var(--border);
+            padding: 0.8rem 1rem; font-size: 1rem; font-weight: 900; text-transform: uppercase;
+            cursor: pointer; box-shadow: 4px 4px 0px var(--border); border-radius: 4px; flex: 1; text-align: center; transition: 0.1s;
+        }
+        .btn:active { transform: translate(4px, 4px); box-shadow: 0px 0px 0px var(--border); }
+        .btn-alt { background: var(--panel); color: var(--fg); flex: 0.5; }
+        .btn[disabled] { opacity: 0.5; cursor: not-allowed; pointer-events: none; }
+
+        /* --- CANVAS --- */
+        .cvs-wrap {
+            border: 3px solid var(--border); background: var(--panel); box-shadow: 8px 8px 0px var(--border);
+            border-radius: 8px; padding: 0.5rem; width: 100%; max-width: 800px;
+            display: none; margin-bottom: 2rem; overflow: auto; max-height: 70vh;
+        }
+        .cvs-wrap.active { display: block; }
+        canvas { display: block; width: 100%; height: auto; border: 2px solid var(--border); background: var(--cvs-bg); cursor: crosshair; }
+
+        /* --- CONFETTI --- */
+        .confetti-piece { position: fixed; top: -10px; z-index: 9999; pointer-events: none; }
+    </style>
 </head>
 <body>
 
@@ -22,12 +111,10 @@
     <p class="sub-text">Expand your mind (literally).</p>
 
     <div class="pikachu-panel">
-        
-        <label>1. Select Image or Snap Selfie</label>
-        <div class="action-row">
+        <label>
+            1. Select an Image
             <input type="file" id="fileIn" accept="image/*">
-            <button class="btn btn-alt" id="camBtn" style="flex: 0.4;">📸 Selfie</button>
-        </div>
+        </label>
         
         <label>
             2. Forehead Cut Line
@@ -35,7 +122,7 @@
         </label>
         
         <label>
-            3. Vertical Stretch (Goes backwards to squish!)
+            3. Vertical Stretch (Squish to Stretch)
             <input type="range" id="sSlider" min="0.1" max="5" step="0.1" value="1">
         </label>
 
@@ -44,7 +131,7 @@
             <input type="range" id="wSlider" min="0.5" max="3" step="0.1" value="1">
         </label>
 
-        <label>5. Stickers (Drag to move)</label>
+        <label>5. Stickers (Click to drop, drag to move)</label>
         <div class="sticker-bar">
             <button class="sticker-btn">🧠</button>
             <button class="sticker-btn">👁️</button>
@@ -53,16 +140,9 @@
             <button class="sticker-btn" id="clearStickers" style="font-size: 0.8rem; flex: 1;">Clear</button>
         </div>
 
-        <label>6. Meme Text</label>
-        <input type="text" id="topText" class="text-input" placeholder="TOP TEXT">
-        <input type="text" id="botText" class="text-input" placeholder="BOTTOM TEXT">
-
-        <div class="options-grid">
-            <label class="check-wrap"><input type="checkbox" id="guideCb" checked> Guide Line</label>
-            <label class="check-wrap"><input type="checkbox" id="sfxCb"> 🔊 SFX</label>
-            <label class="check-wrap"><input type="checkbox" id="jelloCb"> 🪼 Jello Mode</label>
-            <label class="check-wrap"><input type="checkbox" id="fryCb"> 🍟 Deep Fry</label>
-        </div>
+        <label class="check-wrap" style="border-top: 2px dashed var(--border); padding-top: 15px;">
+            <input type="checkbox" id="guideCb" checked> Show Red Guide Line
+        </label>
 
         <div class="btn-row">
             <button class="btn btn-alt" id="rstBtn" disabled>Reset</button>
@@ -70,12 +150,218 @@
         </div>
     </div>
 
-    <video id="webcamVideo" autoplay playsinline style="display:none;"></video>
-
     <div class="cvs-wrap" id="wrap">
         <canvas id="cvs"></canvas>
     </div>
 
-    <script src="app.js"></script>
+    <script>
+        // --- ALL JAVASCRIPT LOGIC SAFELY INSIDE THE HTML FILE ---
+        const UI = {
+            fileIn: document.getElementById('fileIn'),
+            y: document.getElementById('ySlider'), s: document.getElementById('sSlider'), w: document.getElementById('wSlider'),
+            guide: document.getElementById('guideCb'),
+            dlBtn: document.getElementById('dlBtn'), rstBtn: document.getElementById('rstBtn'),
+            tBtn: document.getElementById('tBtn'), cvs: document.getElementById('cvs'),
+            wrap: document.getElementById('wrap')
+        };
+        const ctx = UI.cvs.getContext('2d');
+
+        let pikachu = null, sW = 0, sH = 0, isCoolingDown = false;
+        let stickers = [], draggingSticker = null;
+
+        // Theme Toggle
+        UI.tBtn.onclick = () => {
+            const mode = document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            document.body.setAttribute('data-theme', mode);
+            UI.tBtn.innerText = mode === 'dark' ? '☀️' : '🌙';
+        };
+
+        // File Upload
+        UI.fileIn.onclick = function() { this.value = null; };
+        UI.fileIn.onchange = e => {
+            const file = e.target.files[0];
+            if(!file) return;
+            if(file.size > 10 * 1024 * 1024) return alert("File too big! (10MB max)");
+            const reader = new FileReader();
+            reader.onload = ev => {
+                const img = new Image();
+                img.onload = () => {
+                    pikachu = img;
+                    const maxW = 800;
+                    const ratio = img.width > maxW ? maxW / img.width : 1;
+                    sW = img.width * ratio;
+                    sH = img.height * ratio;
+                    UI.dlBtn.removeAttribute('disabled');
+                    UI.rstBtn.removeAttribute('disabled');
+                    UI.wrap.classList.add('active');
+                    resetParams();
+                };
+                img.src = ev.target.result;
+            }
+            reader.readAsDataURL(file);
+        };
+
+        // Inputs triggering redraw
+        UI.y.oninput = triggerRender;
+        UI.s.oninput = triggerRender;
+        UI.w.oninput = triggerRender;
+        UI.guide.onchange = triggerRender;
+
+        UI.rstBtn.onclick = resetParams;
+
+        function resetParams() {
+            UI.s.value = 1; UI.w.value = 1; UI.y.value = 25;
+            stickers = []; UI.guide.checked = true;
+            triggerRender();
+        }
+
+        // Sticker Logic
+        document.querySelectorAll('.sticker-btn').forEach(btn => {
+            btn.onclick = (e) => {
+                if(e.target.id === 'clearStickers') stickers = [];
+                else stickers.push({ text: e.target.innerText, x: sW / 2, y: sH * 0.2, size: 60 });
+                triggerRender();
+            };
+        });
+
+        // Dragging Stickers
+        UI.cvs.onmousedown = e => {
+            const rect = UI.cvs.getBoundingClientRect();
+            const mx = (e.clientX - rect.left) * (UI.cvs.width / rect.width);
+            const my = (e.clientY - rect.top) * (UI.cvs.height / rect.height);
+            for(let i = stickers.length - 1; i >= 0; i--) {
+                const s = stickers[i];
+                ctx.font = `${s.size}px Arial`;
+                const m = ctx.measureText(s.text);
+                if(mx > s.x - m.width/2 && mx < s.x + m.width/2 && my > s.y - s.size && my < s.y) {
+                    draggingSticker = s; break;
+                }
+            }
+        };
+        UI.cvs.onmousemove = e => {
+            if(!draggingSticker) return;
+            const rect = UI.cvs.getBoundingClientRect();
+            draggingSticker.x = (e.clientX - rect.left) * (UI.cvs.width / rect.width);
+            draggingSticker.y = (e.clientY - rect.top) * (UI.cvs.height / rect.height);
+            triggerRender();
+        };
+        UI.cvs.onmouseup = () => draggingSticker = null;
+        UI.cvs.onmouseleave = () => draggingSticker = null;
+
+        // Core Rendering
+        function triggerRender() { drawStretchedImage(); }
+
+        function drawStretchedImage(isExporting = false, targetCtx = ctx, targetWidth = UI.cvs.width, targetHeight = UI.cvs.height) {
+            if (!pikachu) return;
+
+            const sm = parseFloat(UI.s.value);
+            const wm = parseFloat(UI.w.value);
+            const cutY = sH * (parseFloat(UI.y.value) / 100);
+
+            const newTopH = cutY * sm;
+            const botH = sH - cutY;
+            
+            if(!isExporting) {
+                UI.cvs.width = sW; UI.cvs.height = newTopH + botH;
+                targetWidth = UI.cvs.width; targetHeight = UI.cvs.height;
+            }
+
+            targetCtx.clearRect(0, 0, targetWidth, targetHeight);
+
+            const tw = targetWidth * wm;
+            const tx = (targetWidth - tw) / 2;
+            const origCut = pikachu.height * (parseFloat(UI.y.value) / 100);
+            const origBot = pikachu.height - origCut;
+
+            targetCtx.drawImage(pikachu, 0, 0, pikachu.width, origCut, tx, 0, tw, newTopH);
+            targetCtx.drawImage(pikachu, 0, origCut, pikachu.width, origBot, 0, newTopH, targetWidth, botH);
+
+            // Draw Stickers
+            targetCtx.textAlign = "center";
+            stickers.forEach(s => {
+                targetCtx.font = `${s.size}px Arial`;
+                targetCtx.fillText(s.text, s.x, s.y);
+            });
+
+            // Draw Guide Line
+            if (UI.guide.checked && !isExporting && targetCtx === ctx) {
+                targetCtx.beginPath(); targetCtx.moveTo(0, newTopH); targetCtx.lineTo(targetWidth, newTopH);
+                targetCtx.strokeStyle = '#ff4747'; targetCtx.lineWidth = 3; targetCtx.setLineDash([10, 8]); 
+                targetCtx.stroke(); targetCtx.setLineDash([]); 
+            }
+        }
+
+        // Confetti Engine
+        function fireConfetti() {
+            const colors = ['#ff4747', '#b9ff66', '#ff79c6', '#8be9fd', '#f1fa8c'];
+            for(let i=0; i<80; i++) {
+                const conf = document.createElement('div');
+                conf.className = 'confetti-piece';
+                conf.style.left = Math.random() * 100 + 'vw';
+                conf.style.width = (Math.random() * 10 + 5) + 'px';
+                conf.style.height = (Math.random() * 20 + 10) + 'px';
+                conf.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                document.body.appendChild(conf);
+                
+                const duration = Math.random() * 2 + 2;
+                conf.animate([
+                    { transform: `translateY(0) rotate(0)`, opacity: 1 },
+                    { transform: `translateY(100vh) rotate(${Math.random()*720}deg)`, opacity: 0 }
+                ], { duration: duration * 1000, easing: 'cubic-bezier(.37,0,.63,1)' });
+                setTimeout(() => conf.remove(), duration * 1000);
+            }
+        }
+
+        // Polaroid Export
+        UI.dlBtn.onclick = () => {
+            if (!pikachu || isCoolingDown) return;
+            isCoolingDown = true;
+            UI.dlBtn.innerText = 'WAIT...';
+            
+            const sm = parseFloat(UI.s.value);
+            const cutY = sH * (parseFloat(UI.y.value) / 100);
+            const stretchedH = (cutY * sm) + (sH - cutY);
+            
+            const exportCvs = document.createElement('canvas');
+            const exportCtx = exportCvs.getContext('2d');
+            
+            const padding = 40;
+            const finalImageH = Math.max(sH, stretchedH);
+            exportCvs.width = (sW * 2) + (padding * 3);
+            exportCvs.height = finalImageH + (padding * 3) + 60;
+
+            exportCtx.fillStyle = '#f4f4f0'; exportCtx.fillRect(0, 0, exportCvs.width, exportCvs.height);
+            
+            exportCtx.fillStyle = '#111';
+            exportCtx.fillRect(padding - 5, padding - 5, sW + 10, sH + 10);
+            exportCtx.drawImage(pikachu, padding, padding, sW, sH);
+            
+            const rightStartX = sW + (padding * 2);
+            exportCtx.fillRect(rightStartX - 5, padding - 5, sW + 10, stretchedH + 10);
+            
+            exportCtx.save();
+            exportCtx.translate(rightStartX, padding);
+            drawStretchedImage(true, exportCtx, sW, stretchedH);
+            exportCtx.restore();
+
+            exportCtx.fillStyle = '#111'; exportCtx.font = 'bold 30px Arial'; exportCtx.textAlign = "center";
+            exportCtx.fillText("BEFORE", padding + (sW/2), sH + padding + 40);
+            exportCtx.fillText("AFTER", rightStartX + (sW/2), stretchedH + padding + 40);
+            exportCtx.font = 'bold 20px Arial';
+            exportCtx.fillText("🧠 Created with Forehead Stretcher Pro", exportCvs.width / 2, exportCvs.height - 20);
+
+            const a = document.createElement('a');
+            a.download = 'forehead-polaroid.png';
+            a.href = exportCvs.toDataURL('image/png');
+            a.click();
+            
+            fireConfetti(); 
+
+            setTimeout(() => {
+                isCoolingDown = false;
+                UI.dlBtn.innerText = '💾 Export Polaroid';
+            }, 2000);
+        };
+    </script>
 </body>
 </html>

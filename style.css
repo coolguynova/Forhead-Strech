@@ -20,10 +20,7 @@
 }
 
 /* --- BASE RESET --- */
-* { 
-    box-sizing: border-box; 
-    /* The code that hid scrollbars globally has been removed! */
-}
+* { box-sizing: border-box; }
 
 body {
     font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
@@ -39,230 +36,81 @@ body {
 }
 
 /* --- HEADER & TYPOGRAPHY --- */
-.header-wrap { 
-    display: flex; 
-    align-items: center; 
-    gap: 1rem; 
-    margin-bottom: 0.5rem; 
-}
-
-h1 { 
-    font-size: clamp(2rem, 8vw, 3.5rem); 
-    font-weight: 900; 
-    letter-spacing: -2px; 
-    margin: 0; 
-    text-align: center; 
-    line-height: 1.1; 
-}
-
-.sub-text { 
-    font-size: 1.1rem; 
-    font-weight: 500; 
-    margin-bottom: 2rem; 
-    text-align: center; 
-    border-bottom: 3px solid var(--border); 
-    padding-bottom: 0.5rem; 
-    display: inline-block; 
-}
+.header-wrap { display: flex; align-items: center; gap: 1rem; margin-bottom: 0.5rem; }
+h1 { font-size: clamp(2rem, 8vw, 3.5rem); font-weight: 900; letter-spacing: -2px; margin: 0; text-align: center; line-height: 1.1; }
+.sub-text { font-size: 1.1rem; font-weight: 500; margin-bottom: 2rem; text-align: center; border-bottom: 3px solid var(--border); padding-bottom: 0.5rem; display: inline-block; }
 
 /* --- THEME TOGGLE BUTTON --- */
 #tBtn {
-    background: var(--panel); 
-    color: var(--fg); 
-    border: 3px solid var(--border);
-    font-size: 1.5rem; 
-    width: 50px; 
-    height: 50px; 
-    border-radius: 50%; 
-    cursor: pointer;
-    box-shadow: 4px 4px 0px var(--border); 
-    transition: transform 0.1s;
-    display: flex; 
-    align-items: center; 
-    justify-content: center;
+    background: var(--panel); color: var(--fg); border: 3px solid var(--border);
+    font-size: 1.5rem; width: 50px; height: 50px; border-radius: 50%; cursor: pointer;
+    box-shadow: 4px 4px 0px var(--border); transition: transform 0.1s;
+    display: flex; align-items: center; justify-content: center;
 }
-
-#tBtn:active { 
-    transform: translate(2px, 2px); 
-    box-shadow: 2px 2px 0px var(--border); 
-}
+#tBtn:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0px var(--border); }
 
 /* --- MAIN NEO-BRUTALIST PANEL --- */
 .pikachu-panel {
-    background: var(--panel); 
-    border: 3px solid var(--border); 
-    border-radius: 8px;
-    box-shadow: 8px 8px 0px var(--border); 
-    padding: 1.5rem; 
-    margin-bottom: 2rem;
-    width: 100%; 
-    max-width: 480px; 
-    display: flex; 
-    flex-direction: column; 
-    gap: 1.2rem;
+    background: var(--panel); border: 3px solid var(--border); border-radius: 8px;
+    box-shadow: 8px 8px 0px var(--border); padding: 1.5rem; margin-bottom: 2rem;
+    width: 100%; max-width: 480px; display: flex; flex-direction: column; gap: 1.2rem;
     transition: background-color 0.2s, box-shadow 0.2s, border 0.2s;
 }
 
 /* --- FORM ELEMENTS (LABELS & FILE INPUT) --- */
-label { 
-    display: flex; 
-    flex-direction: column; 
-    font-weight: 800; 
-    font-size: 0.85rem; 
-    text-transform: uppercase; 
-    letter-spacing: 0.5px; 
-    gap: 8px; 
-}
-
-.check-wrap { 
-    flex-direction: row; 
-    align-items: center; 
-    cursor: pointer; 
-    margin-top: 0.5rem; 
-}
-
-input[type="checkbox"] { 
-    width: 20px; 
-    height: 20px; 
-    accent-color: #ff4747; 
-    border: 2px solid var(--border); 
-    cursor: pointer; 
-}
+label { display: flex; flex-direction: column; font-weight: 800; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px; gap: 8px; }
+.check-wrap { flex-direction: row; align-items: center; cursor: pointer; margin-top: 0.5rem; }
+input[type="checkbox"] { width: 20px; height: 20px; accent-color: #ff4747; border: 2px solid var(--border); cursor: pointer; }
 
 input[type="file"] {
-    font-family: inherit; 
-    border: 2px solid var(--border); 
-    padding: 0.5rem;
-    background: var(--bg); 
-    color: var(--fg); 
-    border-radius: 4px; 
-    cursor: pointer;
-    font-size: 0.9rem; 
-    font-weight: 600; 
-    width: 100%;
+    font-family: inherit; border: 2px solid var(--border); padding: 0.5rem;
+    background: var(--bg); color: var(--fg); border-radius: 4px; cursor: pointer;
+    font-size: 0.9rem; font-weight: 600; width: 100%;
 }
-
 input[type="file"]::file-selector-button {
-    background: var(--border); 
-    color: var(--bg); 
-    border: none; 
-    padding: 0.4rem 0.8rem;
-    border-radius: 2px; 
-    margin-right: 1rem; 
-    cursor: pointer; 
-    font-weight: bold; 
-    transition: transform 0.1s;
+    background: var(--border); color: var(--bg); border: none; padding: 0.4rem 0.8rem;
+    border-radius: 2px; margin-right: 1rem; cursor: pointer; font-weight: bold; transition: transform 0.1s;
 }
 
 /* --- BULLETPROOF RANGE SLIDERS --- */
-input[type="range"] {
-    -webkit-appearance: none; 
-    width: 100%; 
-    background: transparent; 
-    margin: 15px 0; 
-    touch-action: none; 
-    cursor: pointer;
-}
-
+input[type="range"] { -webkit-appearance: none; width: 100%; background: transparent; margin: 15px 0; touch-action: none; cursor: pointer; }
 input[type="range"]:focus { outline: none; }
-
 input[type="range"]::-webkit-slider-thumb {
-    -webkit-appearance: none; 
-    height: 24px; 
-    width: 24px; 
-    border-radius: 50%;
-    background: #ff4747; 
-    border: 3px solid var(--border); 
-    margin-top: -9px;
+    -webkit-appearance: none; height: 24px; width: 24px; border-radius: 50%;
+    background: #ff4747; border: 3px solid var(--border); margin-top: -9px;
     box-shadow: 2px 2px 0px var(--border);
 }
+#wSlider::-webkit-slider-thumb { background: #6272a4; }
+input[type="range"]::-webkit-slider-runnable-track { width: 100%; height: 8px; background: var(--track); border: 2px solid var(--border); border-radius: 4px; }
+input[type="range"]::-moz-range-track { width: 100%; height: 8px; background: var(--track); border: 2px solid var(--border); border-radius: 4px; }
 
-#wSlider::-webkit-slider-thumb { 
-    background: #6272a4; 
+/* --- STICKER TOOLBAR & OPTIONS --- */
+.sticker-bar { display: flex; gap: 10px; margin-bottom: 5px; }
+.sticker-btn {
+    background: var(--bg); border: 2px solid var(--border); border-radius: 4px;
+    font-size: 1.5rem; padding: 5px; cursor: pointer; box-shadow: 2px 2px 0px var(--border);
+    transition: transform 0.1s;
 }
-
-input[type="range"]::-webkit-slider-runnable-track {
-    width: 100%; 
-    height: 8px; 
-    background: var(--track); 
-    border: 2px solid var(--border); 
-    border-radius: 4px;
-}
-
-/* Firefox Fallback for the Track */
-input[type="range"]::-moz-range-track {
-    width: 100%; 
-    height: 8px; 
-    background: var(--track); 
-    border: 2px solid var(--border); 
-    border-radius: 4px;
-}
+.sticker-btn:active { transform: translate(2px, 2px); box-shadow: 0px 0px 0px var(--border); }
+.options-row { display: flex; justify-content: space-between; align-items: center; border-top: 2px dashed var(--border); padding-top: 10px; margin-top: 5px; }
 
 /* --- ACTION BUTTONS --- */
-.btn-row { 
-    display: flex; 
-    gap: 1rem; 
-    margin-top: 1rem; 
-}
-
+.btn-row { display: flex; gap: 1rem; margin-top: 1rem; }
 .btn {
-    font-family: inherit; 
-    background: var(--btn); 
-    color: #111; 
-    border: 3px solid var(--border);
-    padding: 0.8rem 1rem; 
-    font-size: 1rem; 
-    font-weight: 900; 
-    text-transform: uppercase;
-    cursor: pointer; 
-    box-shadow: 4px 4px 0px var(--border); 
-    border-radius: 4px;
-    transition: all 0.1s ease; 
-    flex: 1; 
-    text-align: center;
+    font-family: inherit; background: var(--btn); color: #111; border: 3px solid var(--border);
+    padding: 0.8rem 1rem; font-size: 1rem; font-weight: 900; text-transform: uppercase;
+    cursor: pointer; box-shadow: 4px 4px 0px var(--border); border-radius: 4px;
+    transition: all 0.1s ease; flex: 1; text-align: center;
 }
-
-.btn:active { 
-    transform: translate(4px, 4px); 
-    box-shadow: 0px 0px 0px var(--border); 
-}
-
-.btn-alt { 
-    background: var(--panel); 
-    color: var(--fg); 
-    flex: 0.5; 
-}
-
-.btn[disabled] { 
-    opacity: 0.5; 
-    cursor: not-allowed; 
-    pointer-events: none; 
-}
+.btn:active { transform: translate(4px, 4px); box-shadow: 0px 0px 0px var(--border); }
+.btn-alt { background: var(--panel); color: var(--fg); flex: 0.5; }
+.btn[disabled] { opacity: 0.5; cursor: not-allowed; pointer-events: none; }
 
 /* --- CANVAS & SCROLLING WRAPPER --- */
 .cvs-wrap {
-    border: 3px solid var(--border); 
-    background: var(--panel); 
-    box-shadow: 8px 8px 0px var(--border);
-    border-radius: 8px; 
-    padding: 0.5rem; 
-    width: 100%; 
-    max-width: 800px;
-    display: none; 
-    margin-bottom: 2rem; 
-    /* Scrollbar fixes applied here */
-    overflow: auto; 
-    max-height: 70vh;
+    border: 3px solid var(--border); background: var(--panel); box-shadow: 8px 8px 0px var(--border);
+    border-radius: 8px; padding: 0.5rem; width: 100%; max-width: 800px;
+    display: none; margin-bottom: 2rem; overflow: auto; max-height: 70vh;
 }
-
-.cvs-wrap.active { 
-    display: block; 
-}
-
-canvas { 
-    display: block; 
-    width: 100%; 
-    height: auto; 
-    border: 2px solid var(--border); 
-    background: var(--cvs-bg); 
-}
+.cvs-wrap.active { display: block; }
+canvas { display: block; width: 100%; height: auto; border: 2px solid var(--border); background: var(--cvs-bg); cursor: crosshair; }
